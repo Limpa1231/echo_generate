@@ -11,11 +11,16 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-	dsn := "host=localhost user=postgres password=root dbname=fark port=5432 sslmode=disable"
+	dsn := "host=localhost user=youruser dbname=yourdb sslmode=disable password=yourpassword"
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database: ", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	DB.AutoMigrate(&orm.Message{})
+
+	// Автомиграция схемы
+	err = DB.AutoMigrate(&orm.Message{})
+	if err != nil {
+		log.Fatalf("Failed to auto migrate: %v", err)
+	}
 }
